@@ -1,0 +1,391 @@
+{
+  "schema_version": "1.1",
+  "regions": {
+    "intl": {
+      "workflows": {
+        "geoscience": {
+          "dashboard_routes": [
+            {
+              "name": "field_summary_dashboard_load",
+              "path": "tdp_geoscience/intl/field_summary/{field_id}",
+              "description": "Loads field summary data for a specific field_id.",
+              "intent": "field_summary",
+              "example_utterances": [
+                "show me a summary for the field",
+                "field summary for FIELD_NAME",
+                "load field summary using field id",
+                "view details of field FIELD_NAME",
+                "show field details for FIELD_NAME"
+              ],
+              "required_parameters": [
+                "workflow",
+                "region"
+              ],
+              "required_one_of": [
+                [
+                  "field_id"
+                ],
+                [
+                  "field_name"
+                ]
+              ],
+              "optional_parameters": [
+                "field_name"
+              ],
+              "parameter_metadata": {
+                "field_id": {
+                  "type": "array",
+                  "items": "string",
+                  "multi_value": true,
+                  "description": "One or more field identifiers."
+                },
+                "field_name": {
+                  "type": "array",
+                  "items": "string",
+                  "multi_value": true,
+                  "description": "One or more field names."
+                }
+              },
+              "response_type": "dashboard_load"
+            },
+            {
+              "name": "reservoir_summary_dashboard_load",
+              "path": "tdp_geoscience/intl/reservoir_summary/{reservoir_id}",
+              "description": "Loads reservoir summary data for a specific reservoir_id.",
+              "intent": "reservoir_summary",
+              "example_utterances": [
+                "show reservoir summary",
+                "reservoir summary for RESERVOIR_NAME",
+                "load reservoir summary using reservoir id",
+                "view details of reservoir RESERVOIR_NAME",
+                "show reservoir details for RESERVOIR_NAME"
+              ],
+              "required_parameters": [
+                "workflow",
+                "region"
+              ],
+              "required_one_of": [
+                [
+                  "reservoir_id"
+                ],
+                [
+                  "reservoir_name"
+                ]
+              ],
+              "optional_parameters": [
+                "reservoir_name"
+              ],
+              "parameter_metadata": {
+                "reservoir_id": {
+                  "type": "array",
+                  "items": "string",
+                  "multi_value": true,
+                  "description": "One or more reservoir identifiers."
+                },
+                "reservoir_name": {
+                  "type": "array",
+                  "items": "string",
+                  "multi_value": true,
+                  "description": "One or more reservoir names.",
+                  "sample_values": [
+                    "rev-1",
+                    "rev-2",
+                    "Ghawar-North",
+                    "main-reservoir"
+                  ]
+                }
+              },
+              "response_type": "dashboard_load"
+            }
+          ],
+          "semantic_views": [
+            {
+              "name": "TITAN_APP.TDP_GEOSCIENCE.SV_INTL_FIELD_SUMMARY",
+              "description": "Field-level data for international geoscience workflows.",
+              "intent": "field_summary_view",
+              "required_parameters": [
+                "workflow",
+                "region"
+              ],
+              "example_utterances": [
+                "analyze field performance",
+                "compare fields by country",
+                "answer a question about fields"
+              ],
+              "dashboard_ids": [
+                "field_summary_dashboard_load"
+              ]
+            },
+            {
+              "name": "TITAN_APP.TDP_GEOSCIENCE.SV_INTL_RESERVOIR_SUMMARY",
+              "description": "Reservoir-level geoscience and production data.",
+              "intent": "reservoir_summary_view",
+              "required_parameters": [
+                "workflow",
+                "region"
+              ],
+              "example_utterances": [
+                "analyze reservoir performance",
+                "compare reservoirs by production",
+                "answer a question about reservoirs"
+              ],
+              "dashboard_ids": [
+                "reservoir_summary_dashboard_load"
+              ]
+            },
+            {
+              "name": "TITAN_APP.INTL_MAP_LAYERS.SV_FIELDS",
+              "description": "Field-level geospatial metadata for map-driven field queries.",
+              "intent": "field_map_semantic_view",
+              "required_parameters": [
+                "workflow",
+                "region"
+              ],
+              "example_utterances": [
+                "get fields in basin X of country",
+                "list oil fields in India",
+                "find fields for a country"
+              ],
+              "dashboard_ids": [
+                "field_summary_dashboard_load"
+              ]
+            }
+          ],
+          "map_layers": [],
+          "route_constraints": {
+            "dashboard_routes": [
+              "field_summary_dashboard_load",
+              "reservoir_summary_dashboard_load"
+            ],
+            "semantic_views": [
+              "TITAN_APP.TDP_GEOSCIENCE.SV_INTL_FIELD_SUMMARY",
+              "TITAN_APP.TDP_GEOSCIENCE.SV_INTL_RESERVOIR_SUMMARY",
+              "TITAN_APP.INTL_MAP_LAYERS.SV_FIELDS"
+            ]
+          }
+        },
+        "screening": {
+          "dashboard_routes": [],
+          "semantic_views": [],
+          "map_layers": [],
+          "route_constraints": {
+            "dashboard_routes": [],
+            "semantic_views": []
+          }
+        },
+        "access": {
+          "dashboard_routes": [],
+          "semantic_views": [],
+          "map_layers": [],
+          "route_constraints": {
+            "dashboard_routes": [],
+            "semantic_views": []
+          }
+        }
+      },
+      "common_map_layers": [
+        {
+          "name": "main_basin",
+          "description": "Main Basin",
+          "intent": "map_layer_main_basin",
+          "group": "basins",
+          "supported_endpoints": [
+            "layers_viewport",
+            "layers_feature_ids"
+          ],
+          "aliases": [
+            "basins",
+            "main basins"
+          ],
+          "example_utterances": [
+            "show basins",
+            "map basins"
+          ],
+          "required_parameters": [],
+          "optional_parameters": [
+            "BASIN_NAME",
+            "bbox",
+            "zoom",
+            "country_name"
+          ],
+          "primary_key": "BASIN_COUNTRIES_TABLE_ID",
+          "unique_keys": [],
+          "resolution_keys": []
+        },
+        {
+          "name": "sub_basin",
+          "description": "Sub Basin",
+          "intent": "map_layer_sub_basin",
+          "group": "basins",
+          "supported_endpoints": [
+            "layers_viewport",
+            "layers_feature_ids"
+          ],
+          "aliases": [
+            "sub basins"
+          ],
+          "example_utterances": [
+            "show sub basins"
+          ],
+          "required_parameters": [],
+          "optional_parameters": [
+            "BASIN_NAME",
+            "bbox",
+            "zoom",
+            "country_name"
+          ],
+          "primary_key": "BASIN_COUNTRIES_TABLE_ID",
+          "unique_keys": [],
+          "resolution_keys": []
+        },
+        {
+          "name": "fields",
+          "description": "Fields",
+          "intent": "map_layer_fields",
+          "group": "exploration_production",
+          "supported_endpoints": [
+            "layers_viewport",
+            "layers_feature_ids"
+          ],
+          "aliases": [
+            "field list",
+            "reservoir list"
+          ],
+          "example_utterances": [
+            "show fields",
+            "map fields"
+          ],
+          "required_parameters": [],
+          "optional_parameters": [],
+          "primary_key": "FIELD_COUNTRIES_TABLE_ID",
+          "unique_keys": [],
+          "resolution_keys": []
+        },
+        {
+          "name": "field",
+          "description": "Fields",
+          "intent": "map_layer_field",
+          "group": "exploration_production",
+          "supported_endpoints": [
+            "layers_viewport",
+            "layers_feature_ids"
+          ],
+          "aliases": [
+            "field"
+          ],
+          "example_utterances": [
+            "show field",
+            "field map"
+          ],
+          "required_parameters": [
+            "country_name"
+          ],
+          "optional_parameters": [
+            "bbox",
+            "zoom"
+          ],
+          "primary_key": "FIELD_COUNTRIES_TABLE_ID",
+          "unique_keys": [
+            "FIE_ID"
+          ],
+          "resolution_keys": [
+            "FIELD_NAME",
+            "COUNTRY_NAME"
+          ]
+        },
+        {
+          "name": "field_reservoirs",
+          "description": "Field Reservoirs",
+          "intent": "map_layer_field_reservoirs",
+          "group": "exploration_production",
+          "supported_endpoints": [
+            "layers_viewport",
+            "layers_feature_ids"
+          ],
+          "aliases": [
+            "reservoirs"
+          ],
+          "example_utterances": [
+            "show reservoirs"
+          ],
+          "required_parameters": [
+            "country_name"
+          ],
+          "optional_parameters": [
+            "bbox",
+            "zoom"
+          ],
+          "primary_key": "TABLE_ID",
+          "unique_keys": [],
+          "resolution_keys": []
+        }
+      ]
+    }
+  },
+  "global_endpoints": [
+    {
+      "name": "ask_analyst",
+      "path": "/ask-analyst",
+      "description": "Answers analytical questions using semantic views per workflow per region.",
+      "intent": "ask_analyst",
+      "example_utterances": [
+        "analyze production trends",
+        "answer a question about fields",
+        "summarize reservoir performance"
+      ],
+      "required_parameters": [
+        "question",
+        "semantic_model_name"
+      ],
+      "optional_parameters": [
+        "messages"
+      ],
+      "region_agnostic": true
+    },
+    {
+      "name": "layers_viewport",
+      "path": "/layers/viewport",
+      "description": "Fetches map layers for a viewport.",
+      "intent": "map_layers_viewport",
+      "example_utterances": [
+        "show basins in Norway",
+        "show map layers for this area",
+        "load layers in the current viewport",
+        "get layer data for this bbox"
+      ],
+      "required_parameters": [
+        "workflow",
+        "region"
+      ],
+      "optional_parameters": [
+        "region",
+        "country_name",
+        "bbox_min_lng",
+        "bbox_min_lat",
+        "bbox_max_lng",
+        "bbox_max_lat",
+        "zoom",
+        "cluster",
+        "map_action",
+        "groups",
+        "layers",
+        "limit",
+        "offset"
+      ],
+      "parameter_metadata": {
+        "country_name": {
+          "type": "string",
+          "description": "Country name filter",
+          "sample_values": [
+            "Oman",
+            "UAE",
+            "Saudi Arabia",
+            "Qatar",
+            "Kuwait"
+          ]
+        }
+      },
+      "region_agnostic": true
+    }
+  ]
+}
